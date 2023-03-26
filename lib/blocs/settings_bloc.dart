@@ -50,11 +50,7 @@ class SettingsBloc extends ChangeNotifier {
 
   Future<void> sendCommand(String cmd) async {
     if (connected == true) {
-      // if (servoStatus == false && cmd != "poweron" && cmd != "poweroff") {
-      //   print("Send the valid command");
-      // } else {
-      //   channel.sink.add(cmd);
-      // }
+      channel.sink.add(cmd);
     } else {
       connect();
       print("Websocket is not connected.");

@@ -41,9 +41,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       }
       Serial.println(cmd);
 
-      if (cmd == "poweron") {
+      if (cmd == "feednow") {
         open_door();
-      } else if (cmd == "poweroff") {
+      } else if (cmd == "feednow") {
         close_door();
       }
 
