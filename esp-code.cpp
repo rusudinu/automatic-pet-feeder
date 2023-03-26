@@ -11,6 +11,15 @@ const char* passw = "iamspeed";
 WebSocketsServer webSocket = WebSocketsServer(81); //websocket init with port 81
 String message_TS = "";
 Servo servo;
+int feedingInterval = -1;
+long oneHour = 3600000;
+long lastFeedTime = 0;
+
+void feed(){
+  open_door();
+  delay(1000);
+  close_door();
+  }
 
 void open_door() {
   servo.write(OPEN_ANGLE);
@@ -24,6 +33,7 @@ void close_door() {
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
   String cmd = "";
+  String connectedMSG = "connected:" + String(feedingInterval);
   switch (type) {
     case WStype_DISCONNECTED:
       Serial.println("Websocket is disconnected");
@@ -31,7 +41,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_CONNECTED: {
         Serial.println("Websocket is connected");
         Serial.println(webSocket.remoteIP(num).toString());
-        webSocket.sendTXT(num, "connected");
+        webSocket.sendTXT(num, connectedMSG);
       }
       break;
     case WStype_TEXT:
@@ -42,9 +52,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       Serial.println(cmd);
 
       if (cmd == "feednow") {
-        open_door();
-      } else if (cmd == "feednow") {
-        close_door();
+        feed();
+      } else if (cmd == "feedin3hours"){
+        feedingInterval = 3;
+      } else if (cmd == "feedin6hours"){
+        feedingInterval = 6;
+      } else if (cmd == "feedin12hours"){
+        feedingInterval = 12;
       }
 
       message_TS = cmd + ":success";
@@ -79,4 +93,11 @@ void setup(void)
 
 void loop() {
   webSocket.loop();
+
+  if (feedingInterval > 0) {
+    if (millis() - lastFeedTime > feedingInterval * oneHour) {
+      feed();
+      lastFeedTime = millis();
+    }
+  }
 }

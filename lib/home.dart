@@ -105,6 +105,17 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: const Text("WS Log"),
+                subtitle: Text(BlocProvider.of(context).settingsBloc.logs[index]),
+              );
+            },
+            itemCount: BlocProvider.of(context).settingsBloc.logs.length,
+          ),
+        ),
       ],
     );
   }
