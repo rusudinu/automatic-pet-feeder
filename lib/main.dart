@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:iotproject/provider/block_provider.dart';
+import 'package:iotproject/settings.dart';
 import 'package:web_socket_channel/io.dart';
+
+import 'home.dart';
+import 'info.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,8 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: PetFeederController(),
+    return BlocProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const PetFeederController(),
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
+      ),
     );
   }
 }
@@ -26,7 +37,19 @@ class PetFeederController extends StatefulWidget {
 class _WebSocketLed extends State<PetFeederController> {
   bool servoStatus = false;
   bool connected = false;
+  int _selectedIndex = 0;
   late IOWebSocketChannel channel;
+  final List<Widget> _widgets = [
+    const Home(),
+    const Info(),
+    const Settings(),
+  ];
+
+  final List<String> _titles = [
+    "Home",
+    "Info",
+    "Settings",
+  ];
 
   @override
   void initState() {
@@ -81,33 +104,43 @@ class _WebSocketLed extends State<PetFeederController> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("LED - ON/OFF NodeMCU"), backgroundColor: Colors.redAccent),
-      body: Container(
-          alignment: Alignment.topCenter,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(child: connected ? Text("WEBSOCKET: CONNECTED") : Text("DISCONNECTED")),
-              Container(child: servoStatus ? Text("LED IS: ON") : Text("LED IS: OFF")),
-              Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: TextButton(
-                      onPressed: () {
-                        if (servoStatus) {
-                          sendcmd("poweroff");
-                          servoStatus = false;
-                        } else {
-                          sendcmd("poweron");
-                          servoStatus = true;
-                        }
-                        setState(() {});
-                      },
-                      child: servoStatus ? Text("TURN LED OFF") : Text("TURN LED ON")))
-            ],
-          )),
+      appBar: AppBar(
+        title: Text(_titles.elementAt(_selectedIndex)),
+        backgroundColor: Colors.amber[800],
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: _widgets.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'Info',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
