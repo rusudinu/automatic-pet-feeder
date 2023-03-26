@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
           ],
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
               icon: const Icon(Icons.timer),
