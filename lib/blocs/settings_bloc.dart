@@ -37,7 +37,7 @@ class SettingsBloc extends ChangeNotifier {
       channel.stream.listen(
         (message) {
           logs.insert(0,message);
-          if (message == "connected:-1" || message == "connected:-3" || message == "connected:-6" || message == "connected:-12") {
+          if (message == "connected:-1" || message == "connected:3" || message == "connected:6" || message == "connected:12") {
             connected = true;
 
             List<String> split = message.split(":");
