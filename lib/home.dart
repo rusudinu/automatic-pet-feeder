@@ -11,6 +11,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of(context).settingsBloc.addListener(() {
+      setState(() {});
+    });
+
     return Column(
       children: [
         Row(
@@ -44,6 +48,8 @@ class _HomeState extends State<Home> {
               },
               label: const Text("3H"),
               style: TextButton.styleFrom(
+                backgroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 3 ? Colors.orange : Colors.transparent,
+                foregroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 3 ? Colors.white : Colors.orange,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5),
@@ -60,6 +66,8 @@ class _HomeState extends State<Home> {
               },
               label: const Text("6H"),
               style: TextButton.styleFrom(
+                backgroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 6 ? Colors.orange : Colors.transparent,
+                foregroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 6 ? Colors.white : Colors.orange,
                 shape: const RoundedRectangleBorder(
                   side: BorderSide(color: Colors.orange, width: 0.5),
                 ),
@@ -72,6 +80,8 @@ class _HomeState extends State<Home> {
               },
               label: const Text("12H"),
               style: TextButton.styleFrom(
+                backgroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 12 ? Colors.orange : Colors.transparent,
+                foregroundColor: BlocProvider.of(context).settingsBloc.feedingInterval == 12 ? Colors.white : Colors.orange,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(5),

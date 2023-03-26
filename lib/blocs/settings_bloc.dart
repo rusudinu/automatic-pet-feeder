@@ -4,6 +4,7 @@ import 'package:web_socket_channel/io.dart';
 
 class SettingsBloc extends ChangeNotifier {
   String socketURL = "ws://192.168.4.1:81";
+  int feedingInterval = -1;
   bool connected = false;
   late IOWebSocketChannel channel;
 
@@ -65,14 +66,20 @@ class SettingsBloc extends ChangeNotifier {
   }
 
   Future<void> feedIn3Hours() async {
+    feedingInterval = 3;
+    notifyListeners();
     sendCommand("feedin3hours");
   }
 
   Future<void> feedIn6Hours() async {
+    feedingInterval = 6;
+    notifyListeners();
     sendCommand("feedin6hours");
   }
 
   Future<void> feedIn12Hours() async {
+    feedingInterval = 12;
+    notifyListeners();
     sendCommand("feedin12hours");
   }
 }
