@@ -35,10 +35,8 @@ class PetFeederController extends StatefulWidget {
 }
 
 class _WebSocketLed extends State<PetFeederController> {
-  bool servoStatus = false;
-  bool connected = false;
   int _selectedIndex = 0;
-  late IOWebSocketChannel channel;
+
   final List<Widget> _widgets = [
     const Home(),
     const Info(),
@@ -53,55 +51,7 @@ class _WebSocketLed extends State<PetFeederController> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      channelconnect();
-    });
-
     super.initState();
-  }
-
-  channelconnect() {
-    try {
-      channel = IOWebSocketChannel.connect("ws://192.168.4.1:81");
-      channel.stream.listen(
-        (message) {
-          print(message);
-          setState(() {
-            if (message == "connected") {
-              connected = true;
-            } else if (message == "poweron:success") {
-              servoStatus = true;
-            } else if (message == "poweroff:success") {
-              servoStatus = false;
-            }
-          });
-        },
-        onDone: () {
-          print("Web socket is closed");
-          setState(() {
-            connected = false;
-          });
-        },
-        onError: (error) {
-          print(error.toString());
-        },
-      );
-    } catch (_) {
-      print("error on connecting to websocket.");
-    }
-  }
-
-  Future<void> sendcmd(String cmd) async {
-    if (connected == true) {
-      if (servoStatus == false && cmd != "poweron" && cmd != "poweroff") {
-        print("Send the valid command");
-      } else {
-        channel.sink.add(cmd);
-      }
-    } else {
-      channelconnect();
-      print("Websocket is not connected.");
-    }
   }
 
   void _onItemTapped(int index) {
