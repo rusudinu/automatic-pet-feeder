@@ -9,3 +9,9 @@ The code for the ESP can be found in esp-code.cpp
 Rusu Dinu-Ștefan
 
 Mîș Emilia-Oana
+
+## Screenshots
+![App home](/screenshots/connected-app-3h-interval.jpg?raw=true)
+![App esp connection](/screenshots/app-ws-connection.jpg?raw=true)
+![ESP Side](/screenshots/esp-side.png?raw=true)
+![ESP Topdown](/screenshots/esp-topdown.png?raw=true)
